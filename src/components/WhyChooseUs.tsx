@@ -9,7 +9,7 @@ const features = [
   {
     icon: Users,
     title: "Professional Drivers",
-    description: "Licensed, experienced, and courteous",
+    description: "Licensed, experienced, and Clean Background-checked",
   },
   {
     icon: Shield,

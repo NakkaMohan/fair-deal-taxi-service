@@ -18,7 +18,7 @@ const REVIEWS_DATA: Review[] = [
     id: "1",
     name: "Sarah Johnson",
     rating: 5,
-    text: "Fair Deal Taxi Service is absolutely fantastic! The driver was professional, courteous, and arrived exactly on time. The vehicle was clean and comfortable. I'll definitely be using them for all my rides in the future!",
+    text: "Fair Deal Car Service is absolutely fantastic! The driver was professional, courteous, and arrived exactly on time. The vehicle was clean and comfortable. I'll definitely be using them for all my rides in the future!",
     source: "Google Reviews",
     date: "January 8, 2026",
   },
@@ -26,7 +26,7 @@ const REVIEWS_DATA: Review[] = [
     id: "2",
     name: "Michael Chen",
     rating: 5,
-    text: "Best taxi service in the Capital Region hands down. I've used them for airport runs multiple times and they've never let me down. Highly reliable and reasonably priced. Highly recommended!",
+    text: "Best Car service in the Capital Region hands down. I've used them for airport runs multiple times and they've never let me down. Highly reliable and reasonably priced. Highly recommended!",
     source: "Yelp",
     date: "January 5, 2026",
   },
@@ -34,7 +34,7 @@ const REVIEWS_DATA: Review[] = [
     id: "3",
     name: "Jennifer Martinez",
     rating: 5,
-    text: "Fair Deal is the only taxi service I trust. Safe drivers, clean cars, and transparent pricing. Had an issue once and their customer service resolved it immediately. Five stars!",
+    text: "Fair Deal is the only Car service I trust. Safe drivers, clean cars, and transparent pricing. Had an issue once and their customer service resolved it immediately. Five stars!",
     source: "Google Reviews",
     date: "December 28, 2025",
   },
@@ -147,7 +147,7 @@ const ReviewsSection = () => {
             KIND WORDS FROM <span className="text-primary">OUR CUSTOMERS</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            See what our satisfied customers have to say about Fair Deal Taxi Service
+            See what our satisfied customers have to say about Fair Deal Car Service
           </p>
         </div>
 
@@ -239,7 +239,7 @@ const ReviewsSection = () => {
             </div>
           </div>
 
-          {/* CTA Buttons */}
+          {/* CTA Buttons 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
             <Button
               variant="outline"
@@ -260,7 +260,7 @@ const ReviewsSection = () => {
                 WRITE A REVIEW
               </a>
             </Button>
-          </div>
+          </div>*/}
         </div>
       </div>
     </section>

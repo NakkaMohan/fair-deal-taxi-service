@@ -299,7 +299,7 @@ const BookingForm = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="standard">Standard Taxi</SelectItem>
+                        <SelectItem value="standard">Black Car</SelectItem>
                         <SelectItem value="premium">Premium Sedan</SelectItem>
                         <SelectItem value="suv">SUV</SelectItem>
                         <SelectItem value="sevenSeater">7 Seater</SelectItem>
