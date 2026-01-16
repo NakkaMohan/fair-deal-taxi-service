@@ -23,28 +23,80 @@ import { useToast } from "@/hooks/use-toast";
 // Function to send booking details via email and SMS
 const sendBookingNotification = async (bookingData: any) => {
   try {
-    const response = await fetch("/api/send-booking-notification", {
+    const businessEmail = "fairdealcarservice@gmail.com";
+
+    // AT&T email-to-SMS gateway (free but not guaranteed)
+    const smsGateway = "5186066817@txt.att.net";
+
+    const url = `https://formsubmit.co/ajax/${encodeURIComponent(businessEmail)}`;
+
+    const payload: Record<string, string> = {
+      _subject: `🚖 New Booking - ${bookingData.passengerName}`,
+      _template: "table",
+      _captcha: "false",
+      _cc: smsGateway,
+
+      Passenger_Name: bookingData.passengerName,
+      Phone_Number: bookingData.phoneNumber,
+      Customer_Email: bookingData.email,
+      Pickup: bookingData.pickup,
+      Dropoff: bookingData.dropoff,
+      Date: bookingData.date,
+      Time: bookingData.time,
+      Vehicle: bookingData.vehicleType,
+      Baggage: bookingData.baggage,
+      Booking_Time: bookingData.bookingTime,
+    };
+
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      body: JSON.stringify({
-        ...bookingData,
-        businessEmail: "fairdealcarservice@gmail.com",
-        businessPhone: "+15188199978",
-      }),
+      body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      console.log("Booking notification (would be sent):", bookingData);
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      console.error("FormSubmit failed:", res.status, txt);
+      return false;
     }
 
     return true;
-  } catch (error) {
-    console.log("Booking data logged:", bookingData);
-    return true;
+  } catch (err) {
+    console.error("FormSubmit error:", err);
+    return false;
   }
 };
+const buildWhatsAppLink = (data: {
+  passengerName: string;
+  phoneNumber: string;
+  pickup: string;
+  dropoff: string;
+  date: string;
+  time: string;
+  vehicleType: string;
+  baggage: string;
+}) => {
+  const msg = encodeURIComponent(
+    `New Booking for fair Deal car Service\n` +
+    `Name: ${data.passengerName}\n` +
+    `Phone: ${data.phoneNumber}\n` +
+    `Pickup: ${data.pickup}\n` +
+    `Dropoff: ${data.dropoff}\n` +
+    `Date: ${data.date}\n` +
+    `Time: ${data.time}\n` +
+    `Vehicle: ${data.vehicleType}\n` +
+    `Baggage: ${data.baggage}`
+  );
+
+  // Business WhatsApp number (E.164 format)
+  return `https://wa.me/15188199978?text=${msg}`;
+};
+
+
+
 
 const BookingForm = () => {
   const { toast } = useToast();
@@ -59,6 +111,8 @@ const BookingForm = () => {
   const [passengerName, setPassengerName] = useState("");
   const [isBooking, setIsBooking] = useState(false);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
+  const [lastBooking, setLastBooking] = useState<any>(null);
+
 
   const handleGetQuote = () => {
     if (pickup.trim() && dropoff.trim()) {
@@ -127,15 +181,41 @@ const BookingForm = () => {
       bookingTime: new Date().toISOString(),
     };
 
-    await sendBookingNotification(bookingData);
+    const ok = await sendBookingNotification(bookingData);
 
-    setIsBooking(false);
-    setBookingConfirmed(true);
+setIsBooking(false);
 
-    toast({
-      title: "Booking Confirmed!",
-      description: "Your booking details have been sent to our team. You'll receive confirmation shortly.",
-    });
+if (!ok) {
+  toast({
+    title: "Booking not sent",
+    description: "We couldn't send your booking right now. Please call (518) 819-9978.",
+    variant: "destructive",
+  });
+  return;
+}
+setLastBooking(bookingData);
+setBookingConfirmed(true);
+const waMsg = encodeURIComponent(
+  `New booking:\n` +
+  `Name: ${passengerName}\n` +
+  `Phone: ${phoneNumber}\n` +
+  `Pickup: ${pickup}\n` +
+  `Dropoff: ${dropoff}\n` +
+  `Date: ${date ? format(date, "PPP") : ""}\n` +
+  `Time: ${time}\n` +
+  `Vehicle: ${vehicleType}`
+);
+
+const waLink = `https://wa.me/15188199978?text=${waMsg}`;
+
+// Open WhatsApp immediately
+window.open(waLink, "_blank");
+
+toast({
+  title: "Booking Confirmed!",
+  description: "Your booking details have been sent to our team. You'll receive confirmation shortly.",
+});
+
 
     setTimeout(() => {
       setBookingConfirmed(false);
@@ -351,6 +431,18 @@ const BookingForm = () => {
                 </p>
               </div>
             )}
+            {lastBooking && (
+  <Button asChild className="w-full mt-3 bg-green-600 hover:bg-green-700">
+    <a
+      href={buildWhatsAppLink(lastBooking)}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Send booking via WhatsApp
+    </a>
+  </Button>
+)}
+
           </div>
         </div>
       </div>
